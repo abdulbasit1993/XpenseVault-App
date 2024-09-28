@@ -11,9 +11,18 @@ import {
   validatePassword,
   validateConfirmPassword,
 } from '../../utils/validations';
+import FullScreenLoader from '../../components/FullScreenLoader';
+import {useSignUpMutation} from '../../redux/services';
+import CustomToast from '../../components/CustomToast';
 
 const SignUp = () => {
   const navigation = useNavigation();
+
+  const [signUp, {isLoading: isSignUpLoading}] = useSignUpMutation();
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [toast, setToast] = useState({visible: false, message: '', type: ''});
 
   const [signUpFormData, setSignUpFormData] = useState({
     email: '',
@@ -29,8 +38,6 @@ const SignUp = () => {
     confirmPasswordError: '',
   });
 
-  console.log('errors : ', errors);
-
   const handleInputChange = (key, value) => {
     setSignUpFormData(prevState => ({
       ...prevState,
@@ -38,7 +45,7 @@ const SignUp = () => {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const nameError = validateName(signUpFormData.name);
     const emailError = validateEmail(signUpFormData.email);
     const passwordError = validatePassword(signUpFormData.password);
@@ -55,14 +62,37 @@ const SignUp = () => {
     });
 
     if (!nameError && !emailError && !passwordError && !confirmPassError) {
-      console.log('Form is valid... proceed to submit..');
+      setIsLoading(true);
+
+      try {
+        const signUpResponse = await signUp(signUpFormData).unwrap();
+
+        console.log('signUpResponse : ', signUpResponse);
+
+        if (signUpResponse?.success) {
+          const {message} = signUpResponse;
+          setToast({visible: true, message: message, type: 'success'});
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.log('Error signUp : ', error);
+
+        const {
+          data: {message},
+        } = error;
+
+        setToast({visible: true, message: message, type: 'error'});
+        setIsLoading(false);
+      }
     } else {
+      setIsLoading(false);
       return;
     }
   };
 
   return (
     <View style={styles.container}>
+      <FullScreenLoader loading={isLoading} />
       <Header title="Sign Up" />
 
       <ScrollView>
@@ -171,6 +201,14 @@ const SignUp = () => {
           </View>
         </View>
       </ScrollView>
+
+      {toast.visible && (
+        <CustomToast
+          setToast={visible => setToast({...toast, visible})}
+          message={toast.message}
+          type={toast.type}
+        />
+      )}
     </View>
   );
 };
