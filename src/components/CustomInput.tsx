@@ -15,6 +15,7 @@ const CustomInput = ({value, onChangeText, placeholder, type}) => {
           value={value}
           onChangeText={onChangeText}
           placeholder={placeholder}
+          placeholderTextColor={'#A9A9A9'}
           secureTextEntry={type === 'password' && !showPassword ? true : false}
         />
       </View>
