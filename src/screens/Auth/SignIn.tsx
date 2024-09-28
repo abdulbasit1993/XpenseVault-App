@@ -4,8 +4,11 @@ import {styles} from '../../styles/SignInStyles';
 import Header from '../../components/Header';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
+import {useNavigation} from '@react-navigation/native';
 
 const SignIn = () => {
+  const navigation = useNavigation();
+
   const handleSubmit = () => {
     console.log('handleSubmit called...');
   };
@@ -58,7 +61,7 @@ const SignIn = () => {
 
           <View style={styles.footerView}>
             <Text style={styles.footerText}>Don't have an account?</Text>
-            <Pressable>
+            <Pressable onPress={() => navigation.navigate('SignUp')}>
               <Text style={styles.signUpText}>Sign Up Here</Text>
             </Pressable>
           </View>
