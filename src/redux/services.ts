@@ -19,7 +19,15 @@ export const apiService = createApi({
         body: body,
       }),
     }),
+    forgotPassword: builder.mutation({
+      query: body => ({
+        url: `/auth/forgot-password`,
+        method: 'POST',
+        body: body,
+      }),
+    }),
   }),
 });
 
-export const {useSignUpMutation, useSignInMutation} = apiService;
+export const {useSignUpMutation, useSignInMutation, useForgotPasswordMutation} =
+  apiService;
