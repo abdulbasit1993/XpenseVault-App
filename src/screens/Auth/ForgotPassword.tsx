@@ -51,6 +51,9 @@ const ForgotPassword = () => {
         if (forgotPassResponse?.success) {
           const {message} = forgotPassResponse;
           setToast({visible: true, message: message, type: 'success'});
+          navigation.navigate('EmailVerification', {
+            email: forgotPassFormData.email,
+          });
         }
       } catch (error) {
         console.log('Error forgotPassword : ', error);
