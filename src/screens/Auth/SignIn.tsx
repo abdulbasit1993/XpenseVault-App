@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, Pressable, Keyboard} from 'react-native';
+import {View, Text, Pressable, Keyboard, TouchableOpacity} from 'react-native';
 import {styles} from '../../styles/SignInStyles';
 import Header from '../../components/Header';
 import CustomInput from '../../components/CustomInput';
@@ -120,9 +120,11 @@ const SignIn = () => {
             )}
           </View>
 
-          <View style={styles.forgotPassView}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('ForgotPassword')}
+            style={styles.forgotPassView}>
             <Text style={styles.forgotPassText}>Forgot Password?</Text>
-          </View>
+          </TouchableOpacity>
 
           <View style={styles.buttonView}>
             <CustomButton
