@@ -3,6 +3,7 @@ import SignIn from '../screens/Auth/SignIn';
 import SignUp from '../screens/Auth/SignUp';
 import ForgotPassword from '../screens/Auth/ForgotPassword';
 import EmailVerification from '../screens/Auth/EmailVerification';
+import ResetPassword from '../screens/Auth/ResetPassword';
 
 const AuthStack = () => {
   const Stack = createNativeStackNavigator();
@@ -17,6 +18,7 @@ const AuthStack = () => {
       <Stack.Screen name="SignUp" component={SignUp} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen name="EmailVerification" component={EmailVerification} />
+      <Stack.Screen name="ResetPassword" component={ResetPassword} />
     </Stack.Navigator>
   );
 };

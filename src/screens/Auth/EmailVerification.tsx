@@ -63,7 +63,6 @@ const EmailVerification = () => {
 
   const handleSubmit = async () => {
     Keyboard.dismiss();
-    console.log('Entered code is : ', code);
 
     if (!code) {
       return setToast({
@@ -84,6 +83,8 @@ const EmailVerification = () => {
       if (validateOTPResponse?.success) {
         const {message} = validateOTPResponse;
         setToast({visible: true, message: message, type: 'success'});
+
+        navigation.navigate('ResetPassword', {email: email});
       }
     } catch (error) {
       const {
