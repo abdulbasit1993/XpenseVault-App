@@ -33,6 +33,13 @@ export const apiService = createApi({
         body: body,
       }),
     }),
+    resetPassword: builder.mutation({
+      query: body => ({
+        url: `/auth/reset-password`,
+        method: 'POST',
+        body: body,
+      }),
+    }),
   }),
 });
 
@@ -41,4 +48,5 @@ export const {
   useSignInMutation,
   useForgotPasswordMutation,
   useValidateOTPMutation,
+  useResetPasswordMutation,
 } = apiService;
