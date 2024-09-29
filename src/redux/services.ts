@@ -26,8 +26,19 @@ export const apiService = createApi({
         body: body,
       }),
     }),
+    validateOTP: builder.mutation({
+      query: body => ({
+        url: `/auth/validate-otp`,
+        method: 'POST',
+        body: body,
+      }),
+    }),
   }),
 });
 
-export const {useSignUpMutation, useSignInMutation, useForgotPasswordMutation} =
-  apiService;
+export const {
+  useSignUpMutation,
+  useSignInMutation,
+  useForgotPasswordMutation,
+  useValidateOTPMutation,
+} = apiService;
