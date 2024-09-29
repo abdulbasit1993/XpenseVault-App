@@ -1,7 +1,7 @@
 import {StyleSheet} from 'react-native';
 import {Colors} from '../constants/colors';
 
-const {WHITE, BLACK, PRIMARY} = Colors;
+const {WHITE, BLACK, PRIMARY, RED} = Colors;
 
 export const styles = StyleSheet.create({
   container: {
@@ -73,5 +73,12 @@ export const styles = StyleSheet.create({
   forgotPassText: {
     fontSize: 14,
     color: PRIMARY,
+  },
+  errorView: {
+    marginTop: 5,
+  },
+  errorText: {
+    fontSize: 14,
+    color: RED,
   },
 });

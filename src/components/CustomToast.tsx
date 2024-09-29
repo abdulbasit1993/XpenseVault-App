@@ -19,7 +19,7 @@ const CustomToast = ({
         duration: 1000,
         useNativeDriver: false,
       }),
-      Animated.delay(1200),
+      Animated.delay(1100),
       Animated.timing(opacity, {
         toValue: 0,
         duration: 700,
