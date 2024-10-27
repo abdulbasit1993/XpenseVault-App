@@ -3,12 +3,12 @@ import {View, Text, Keyboard} from 'react-native';
 import {styles} from '../../styles/ForgotPasswordStyles';
 import FullScreenLoader from '../../components/FullScreenLoader';
 import Header from '../../components/Header';
-import CustomToast from '../../components/CustomToast';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import {validateEmail} from '../../utils/validations';
 import {useForgotPasswordMutation} from '../../redux/services';
 import {useNavigation} from '@react-navigation/native';
+import {useToast} from '../../contexts/ToastContext';
 
 const ForgotPassword = () => {
   const navigation = useNavigation();
@@ -23,7 +23,7 @@ const ForgotPassword = () => {
     emailError: '',
   });
 
-  const [toast, setToast] = useState({visible: false, message: '', type: ''});
+  const {showToast} = useToast();
 
   const handleInputChange = (key, value) => {
     setForgotPassFormData(prevState => ({
@@ -46,11 +46,9 @@ const ForgotPassword = () => {
           forgotPassFormData,
         ).unwrap();
 
-        console.log('forgotPassResponse : ', forgotPassResponse);
-
         if (forgotPassResponse?.success) {
           const {message} = forgotPassResponse;
-          setToast({visible: true, message: message, type: 'success'});
+          showToast(message, 'success');
           navigation.navigate('EmailVerification', {
             email: forgotPassFormData.email,
           });
@@ -62,7 +60,7 @@ const ForgotPassword = () => {
           data: {message},
         } = error;
 
-        setToast({visible: true, message: message, type: 'error'});
+        showToast(message, 'error');
       }
     }
   };
@@ -107,14 +105,6 @@ const ForgotPassword = () => {
           </View>
         </View>
       </View>
-
-      {toast.visible && (
-        <CustomToast
-          setToast={visible => setToast({...toast, visible})}
-          message={toast.message}
-          type={toast.type}
-        />
-      )}
     </View>
   );
 };
