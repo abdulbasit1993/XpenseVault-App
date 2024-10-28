@@ -1,17 +1,27 @@
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {CustomDrawer} from '../components/CustomDrawer';
+import {Colors} from '../constants/colors';
 import HomeScreen from '../screens/Home/HomeScreen';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 
 const HomeStack = () => {
-  const Stack = createNativeStackNavigator();
+  const DrawerStack = createDrawerNavigator();
 
   const options = {
     headerShown: false,
   };
 
   return (
-    <Stack.Navigator screenOptions={options} initialRouteName="HomeScreen">
-      <Stack.Screen name="HomeScreen" component={HomeScreen} />
-    </Stack.Navigator>
+    <DrawerStack.Navigator
+      drawerContent={props => <CustomDrawer {...props} />}
+      screenOptions={{
+        ...options,
+        drawerLabelStyle: {
+          color: Colors.WHITE,
+        },
+      }}
+      initialRouteName="HomeScreen">
+      <DrawerStack.Screen name="HomeScreen" component={HomeScreen} />
+    </DrawerStack.Navigator>
   );
 };
 
