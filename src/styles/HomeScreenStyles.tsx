@@ -8,4 +8,13 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: WHITE,
   },
+  subContainer: {
+    paddingHorizontal: 18,
+    paddingVertical: 18,
+  },
+  titleText: {
+    fontSize: 19,
+    fontWeight: '600',
+    color: Colors.BLACK,
+  },
 });

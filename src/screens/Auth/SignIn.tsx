@@ -11,9 +11,12 @@ import FullScreenLoader from '../../components/FullScreenLoader';
 import {useToast} from '../../contexts/ToastContext';
 import {storeData} from '../../utils/storageService';
 import {resetStack} from '../../navigation/navigationService';
+import {useDispatch} from 'react-redux';
+import {setError, setLoading, setUser} from '../../redux/slices/authSlice';
 
 const SignIn = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const [signIn, {isLoading}] = useSignInMutation();
 
@@ -48,21 +51,32 @@ const SignIn = () => {
 
     if (!emailError && !passwordError) {
       try {
+        dispatch(setLoading(true));
         const signInResponse = await signIn(signInFormData).unwrap();
 
+        console.log(
+          'response sign in : ',
+          JSON.stringify(signInResponse, null, 2),
+        );
+
         if (signInResponse?.success) {
-          const {message, user_token} = signInResponse;
+          const {message, user_token, data} = signInResponse;
           await storeData('token', user_token);
+          dispatch(setUser(data));
+          dispatch(setError(null));
           showToast(message, 'success');
           resetStack(navigation, 'HomeStack');
         }
       } catch (error) {
         console.log('Error signIn : ', error);
+        dispatch(setError(error?.message));
         const {
           data: {message},
         } = error;
 
         showToast(message, 'error');
+      } finally {
+        dispatch(setLoading(false));
       }
     } else {
       return;
