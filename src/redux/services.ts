@@ -1,9 +1,18 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import {baseUrl} from '../config/apiUrl';
+import {getData} from '../utils/storageService';
 
 export const apiService = createApi({
   reducerPath: 'apiService',
-  baseQuery: fetchBaseQuery({baseUrl: baseUrl}),
+  baseQuery: fetchBaseQuery({
+    baseUrl: baseUrl,
+    prepareHeaders: async (headers, {getState}) => {
+      const token = await getData('token');
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+    },
+  }),
   endpoints: builder => ({
     signUp: builder.mutation({
       query: body => ({
@@ -40,6 +49,12 @@ export const apiService = createApi({
         body: body,
       }),
     }),
+    getExpenseCategories: builder.query({
+      query: () => ({
+        url: '/expense-categories',
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -49,4 +64,5 @@ export const {
   useForgotPasswordMutation,
   useValidateOTPMutation,
   useResetPasswordMutation,
+  useGetExpenseCategoriesQuery,
 } = apiService;

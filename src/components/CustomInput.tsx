@@ -4,7 +4,14 @@ import {styles} from '../styles/CustomInputStyles';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Colors} from '../constants/colors';
 
-const CustomInput = ({value, onChangeText, placeholder, type}) => {
+const CustomInput = ({
+  value,
+  onChangeText,
+  placeholder,
+  type,
+  multiline,
+  numberOfLines,
+}) => {
   const [showPassword, setShowPassword] = React.useState(false);
 
   return (
@@ -17,6 +24,8 @@ const CustomInput = ({value, onChangeText, placeholder, type}) => {
           placeholder={placeholder}
           placeholderTextColor={'#A9A9A9'}
           secureTextEntry={type === 'password' && !showPassword ? true : false}
+          multiline={multiline}
+          numberOfLines={numberOfLines}
         />
       </View>
 

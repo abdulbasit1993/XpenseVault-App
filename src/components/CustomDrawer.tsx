@@ -33,18 +33,20 @@ export function CustomDrawer(props) {
     }
   };
 
-  const modifiedItems = props.state.routes.map(route => {
-    let label = route.name;
+  const modifiedItems = props.state.routes
+    .filter(route => route.name !== 'AddExpenseScreen')
+    .map(route => {
+      let label = route.name;
 
-    if (route.name === 'HomeScreen') {
-      label = 'Home';
-    }
+      if (route.name === 'HomeScreen') {
+        label = 'Home';
+      }
 
-    return {
-      ...route,
-      label,
-    };
-  });
+      return {
+        ...route,
+        label,
+      };
+    });
 
   return (
     <ScrollView
