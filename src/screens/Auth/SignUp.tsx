@@ -13,7 +13,9 @@ import {
 } from '../../utils/validations';
 import FullScreenLoader from '../../components/FullScreenLoader';
 import {useSignUpMutation} from '../../redux/services';
-import CustomToast from '../../components/CustomToast';
+import {useToast} from '../../contexts/ToastContext';
+import {storeData} from '../../utils/storageService';
+import {resetStack} from '../../navigation/navigationService';
 
 const SignUp = () => {
   const navigation = useNavigation();
@@ -22,7 +24,7 @@ const SignUp = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const [toast, setToast] = useState({visible: false, message: '', type: ''});
+  const {showToast} = useToast();
 
   const [signUpFormData, setSignUpFormData] = useState({
     email: '',
@@ -67,12 +69,12 @@ const SignUp = () => {
       try {
         const signUpResponse = await signUp(signUpFormData).unwrap();
 
-        console.log('signUpResponse : ', signUpResponse);
-
         if (signUpResponse?.success) {
-          const {message} = signUpResponse;
-          setToast({visible: true, message: message, type: 'success'});
           setIsLoading(false);
+          const {message, user_token} = signUpResponse;
+          await storeData('token', user_token);
+          showToast(message, 'success');
+          resetStack(navigation, 'HomeStack');
         }
       } catch (error) {
         console.log('Error signUp : ', error);
@@ -81,7 +83,7 @@ const SignUp = () => {
           data: {message},
         } = error;
 
-        setToast({visible: true, message: message, type: 'error'});
+        showToast(message, 'error');
         setIsLoading(false);
       }
     } else {
@@ -201,14 +203,6 @@ const SignUp = () => {
           </View>
         </View>
       </ScrollView>
-
-      {toast.visible && (
-        <CustomToast
-          setToast={visible => setToast({...toast, visible})}
-          message={toast.message}
-          type={toast.type}
-        />
-      )}
     </View>
   );
 };

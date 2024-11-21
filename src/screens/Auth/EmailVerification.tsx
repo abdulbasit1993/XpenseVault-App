@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, Keyboard, Pressable} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import CustomButton from '../../components/CustomButton';
-import CustomToast from '../../components/CustomToast';
 import FullScreenLoader from '../../components/FullScreenLoader';
 import Header from '../../components/Header';
 import {styles} from '../../styles/EmailVerificationStyles';
@@ -11,6 +10,7 @@ import {
   useForgotPasswordMutation,
   useValidateOTPMutation,
 } from '../../redux/services';
+import {useToast} from '../../contexts/ToastContext';
 
 const EmailVerification = () => {
   const route = useRoute();
@@ -24,11 +24,11 @@ const EmailVerification = () => {
   const [validateOTP, {isLoading: isValidateOTPloading}] =
     useValidateOTPMutation();
 
-  const [toast, setToast] = useState({visible: false, message: '', type: ''});
-
   const [code, setCode] = useState('');
   const [timer, setTimer] = useState(360);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
+
+  const {showToast} = useToast();
 
   const handleResendCode = async () => {
     try {
@@ -40,7 +40,7 @@ const EmailVerification = () => {
 
       if (forgotPassResponse?.success) {
         const {message} = forgotPassResponse;
-        setToast({visible: true, message: message, type: 'success'});
+        showToast(message, 'success');
         setTimer(360);
         setIsResendDisabled(true);
       }
@@ -49,7 +49,7 @@ const EmailVerification = () => {
         data: {message},
       } = error;
 
-      setToast({visible: true, message: message, type: 'error'});
+      showToast(message, 'error');
     }
   };
 
@@ -65,11 +65,7 @@ const EmailVerification = () => {
     Keyboard.dismiss();
 
     if (!code) {
-      return setToast({
-        visible: true,
-        message: 'Please enter code first',
-        type: 'error',
-      });
+      return showToast('Please enter code first', 'error');
     }
 
     const payload = {
@@ -82,7 +78,7 @@ const EmailVerification = () => {
 
       if (validateOTPResponse?.success) {
         const {message} = validateOTPResponse;
-        setToast({visible: true, message: message, type: 'success'});
+        showToast(message, 'success');
 
         navigation.navigate('ResetPassword', {email: email});
       }
@@ -91,7 +87,7 @@ const EmailVerification = () => {
         data: {message},
       } = error;
 
-      setToast({visible: true, message: message, type: 'error'});
+      showToast(message, 'error');
     }
   };
 
@@ -147,14 +143,6 @@ const EmailVerification = () => {
           </View>
         </View>
       </View>
-
-      {toast.visible && (
-        <CustomToast
-          setToast={visible => setToast({...toast, visible})}
-          message={toast.message}
-          type={toast.type}
-        />
-      )}
     </View>
   );
 };

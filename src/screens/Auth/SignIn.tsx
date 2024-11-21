@@ -8,10 +8,15 @@ import {useNavigation} from '@react-navigation/native';
 import {validateEmail, validatePassword} from '../../utils/validations';
 import {useSignInMutation} from '../../redux/services';
 import FullScreenLoader from '../../components/FullScreenLoader';
-import CustomToast from '../../components/CustomToast';
+import {useToast} from '../../contexts/ToastContext';
+import {storeData} from '../../utils/storageService';
+import {resetStack} from '../../navigation/navigationService';
+import {useDispatch} from 'react-redux';
+import {setError, setLoading, setUser} from '../../redux/slices/authSlice';
 
 const SignIn = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const [signIn, {isLoading}] = useSignInMutation();
 
@@ -25,7 +30,7 @@ const SignIn = () => {
     passwordError: '',
   });
 
-  const [toast, setToast] = useState({visible: false, message: '', type: ''});
+  const {showToast} = useToast();
 
   const handleInputChange = (key, value) => {
     setSignInFormData(prevState => ({
@@ -46,19 +51,32 @@ const SignIn = () => {
 
     if (!emailError && !passwordError) {
       try {
+        dispatch(setLoading(true));
         const signInResponse = await signIn(signInFormData).unwrap();
 
+        console.log(
+          'response sign in : ',
+          JSON.stringify(signInResponse, null, 2),
+        );
+
         if (signInResponse?.success) {
-          const {message} = signInResponse;
-          setToast({visible: true, message: message, type: 'success'});
+          const {message, user_token, data} = signInResponse;
+          await storeData('token', user_token);
+          dispatch(setUser(data));
+          dispatch(setError(null));
+          showToast(message, 'success');
+          resetStack(navigation, 'HomeStack');
         }
       } catch (error) {
         console.log('Error signIn : ', error);
+        dispatch(setError(error?.message));
         const {
           data: {message},
         } = error;
 
-        setToast({visible: true, message: message, type: 'error'});
+        showToast(message, 'error');
+      } finally {
+        dispatch(setLoading(false));
       }
     } else {
       return;
@@ -143,14 +161,6 @@ const SignIn = () => {
           </View>
         </View>
       </View>
-
-      {toast.visible && (
-        <CustomToast
-          setToast={visible => setToast({...toast, visible})}
-          message={toast.message}
-          type={toast.type}
-        />
-      )}
     </View>
   );
 };

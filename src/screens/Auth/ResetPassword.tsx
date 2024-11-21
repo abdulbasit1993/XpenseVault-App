@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {View, Text, Keyboard} from 'react-native';
-import CustomToast from '../../components/CustomToast';
 import FullScreenLoader from '../../components/FullScreenLoader';
 import Header from '../../components/Header';
 import {styles} from '../../styles/ResetPasswordStyles';
@@ -12,6 +11,7 @@ import {
   validateConfirmPassword,
 } from '../../utils/validations';
 import {useResetPasswordMutation} from '../../redux/services';
+import {useToast} from '../../contexts/ToastContext';
 
 const ResetPassword = () => {
   const route = useRoute();
@@ -28,7 +28,7 @@ const ResetPassword = () => {
     confirmPasswordError: '',
   });
 
-  const [toast, setToast] = useState({visible: false, message: '', type: ''});
+  const {showToast} = useToast();
 
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -55,14 +55,14 @@ const ResetPassword = () => {
 
         if (response?.success) {
           const {message} = response;
-          setToast({visible: true, message: message, type: 'success'});
+          showToast(message, 'success');
         }
       } catch (error) {
         const {
           data: {message},
         } = error;
 
-        setToast({visible: true, message: message, type: 'error'});
+        showToast(message, 'error');
       }
     }
   };
@@ -126,14 +126,6 @@ const ResetPassword = () => {
           />
         </View>
       </View>
-
-      {toast.visible && (
-        <CustomToast
-          setToast={visible => setToast({...toast, visible})}
-          message={toast.message}
-          type={toast.type}
-        />
-      )}
     </View>
   );
 };
