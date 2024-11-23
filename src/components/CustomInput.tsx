@@ -11,6 +11,7 @@ const CustomInput = ({
   type,
   multiline,
   numberOfLines,
+  keyboardType,
 }) => {
   const [showPassword, setShowPassword] = React.useState(false);
 
@@ -24,6 +25,7 @@ const CustomInput = ({
           placeholder={placeholder}
           placeholderTextColor={'#A9A9A9'}
           secureTextEntry={type === 'password' && !showPassword ? true : false}
+          keyboardType={keyboardType}
           multiline={multiline}
           numberOfLines={numberOfLines}
         />

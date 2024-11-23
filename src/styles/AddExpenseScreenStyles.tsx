@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
     color: Colors.BLACK,
   },
   formView: {
-    marginTop: 35,
+    marginTop: 5,
   },
   label: {
     color: PRIMARY,
@@ -29,5 +29,20 @@ export const styles = StyleSheet.create({
   },
   formFieldView: {
     marginBottom: 20,
+  },
+  dateInput: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    justifyContent: 'space-between',
+    borderWidth: 3,
+    borderColor: PRIMARY,
+    borderRadius: 10,
+    width: '100%',
+  },
+  dateText: {
+    fontSize: 15,
+    color: '#999',
   },
 });
