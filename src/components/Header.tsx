@@ -6,13 +6,13 @@ import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIc
 import {Colors} from '../constants/colors';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
 
-const Header: React.FC<HeaderProps> = ({title, isHome}) => {
+const Header: React.FC<HeaderProps> = ({title, drawer, backIcon}) => {
   const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
       <View style={styles.leftView}>
-        {isHome && (
+        {drawer ? (
           <Pressable
             onPress={() => {
               navigation.dispatch(DrawerActions.openDrawer());
@@ -23,6 +23,19 @@ const Header: React.FC<HeaderProps> = ({title, isHome}) => {
               style={{fontSize: 25}}
             />
           </Pressable>
+        ) : backIcon ? (
+          <Pressable
+            onPress={() => {
+              navigation.goBack();
+            }}>
+            <MaterialCommunityIcon
+              name="arrow-left"
+              color={Colors.WHITE}
+              style={{fontSize: 25}}
+            />
+          </Pressable>
+        ) : (
+          <></>
         )}
       </View>
       <View style={styles.titleView}>

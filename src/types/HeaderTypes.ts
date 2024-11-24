@@ -1,4 +1,5 @@
 export type HeaderProps = {
   title: string;
-  isHome?: boolean;
+  drawer?: boolean;
+  backIcon?: boolean;
 };

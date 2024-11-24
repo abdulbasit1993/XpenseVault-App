@@ -22,7 +22,7 @@ import {
 import {useToast} from '../../contexts/ToastContext';
 import FullScreenLoader from '../../components/FullScreenLoader';
 
-const AddExpenseScreen = () => {
+const AddExpenseScreen = ({navigation}) => {
   const {
     data,
     error,
@@ -104,14 +104,17 @@ const AddExpenseScreen = () => {
       try {
         const response = await addExpense(newExpenseData).unwrap();
 
-        console.log(
-          'response data add expense : ',
-          JSON.stringify(response, null, 2),
-        );
-
         if (response?.success) {
           const {message} = response;
           showToast(message, 'success');
+          setNewExpenseData({
+            title: '',
+            description: '',
+            date: null,
+            totalAmount: 0,
+            expenseCategoryId: null,
+          });
+          navigation.navigate('ExpensesScreen');
         }
       } catch (error) {
         const {
@@ -143,7 +146,7 @@ const AddExpenseScreen = () => {
   return (
     <View style={styles.container}>
       <FullScreenLoader loading={isAddExpenseLoading} />
-      <Header title="Add Expense" />
+      <Header title="Add Expense" backIcon />
 
       <ScrollView>
         <View style={styles.subContainer}>
@@ -244,6 +247,7 @@ const AddExpenseScreen = () => {
                   borderColor: Colors.PRIMARY,
                 }}
                 placeholder="Select an Expense Category"
+                listMode="MODAL"
               />
             </View>
 

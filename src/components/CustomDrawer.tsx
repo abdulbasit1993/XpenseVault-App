@@ -42,6 +42,10 @@ export function CustomDrawer(props) {
         label = 'Home';
       }
 
+      if (route.name === 'ExpensesScreen') {
+        label = 'Expenses';
+      }
+
       return {
         ...route,
         label,

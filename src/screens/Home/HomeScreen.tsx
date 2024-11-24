@@ -7,17 +7,11 @@ import FloatingActionButton from '../../components/FloatingActionButton';
 const HomeScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
-      <Header title="Home" isHome />
+      <Header title="Home" drawer />
 
       <View style={styles.subContainer}>
         <Text style={styles.titleText}>Recent Transactions</Text>
       </View>
-
-      <FloatingActionButton
-        onPress={() => {
-          navigation.navigate('AddExpenseScreen');
-        }}
-      />
     </View>
   );
 };
