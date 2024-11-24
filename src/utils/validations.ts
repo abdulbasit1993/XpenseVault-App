@@ -33,3 +33,32 @@ export const validateName = name => {
 export const validateConfirmPassword = (password, confirmPassword) => {
   return password === confirmPassword ? '' : 'Passwords do not match';
 };
+
+export const validateTitle = title => {
+  const sanitizedTitle = title.trim();
+  if (!sanitizedTitle || sanitizedTitle.length === 0) {
+    return 'Title cannot be empty';
+  }
+  return '';
+};
+
+export const validateDate = date => {
+  if (!date) {
+    return 'Date is Required';
+  }
+  return '';
+};
+
+export const validateAmount = amount => {
+  if (!amount) {
+    return 'Total Amount is Required';
+  }
+  return '';
+};
+
+export const validateExpenseCategory = cat => {
+  if (!cat) {
+    return 'Expense Category is Required';
+  }
+  return '';
+};
