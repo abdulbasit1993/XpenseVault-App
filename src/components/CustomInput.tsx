@@ -12,6 +12,7 @@ const CustomInput = ({
   multiline,
   numberOfLines,
   keyboardType,
+  customInputStyles,
 }) => {
   const [showPassword, setShowPassword] = React.useState(false);
 
@@ -19,7 +20,7 @@ const CustomInput = ({
     <View style={styles.container}>
       <View>
         <TextInput
-          style={styles.input}
+          style={[styles.input, customInputStyles]}
           value={value}
           onChangeText={onChangeText}
           placeholder={placeholder}

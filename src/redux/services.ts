@@ -55,6 +55,13 @@ export const apiService = createApi({
         method: 'GET',
       }),
     }),
+    addExpense: builder.mutation({
+      query: body => ({
+        url: `/expenses/add`,
+        method: 'POST',
+        body: body,
+      }),
+    }),
   }),
 });
 
@@ -65,4 +72,5 @@ export const {
   useValidateOTPMutation,
   useResetPasswordMutation,
   useGetExpenseCategoriesQuery,
+  useAddExpenseMutation,
 } = apiService;

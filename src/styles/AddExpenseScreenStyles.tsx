@@ -28,7 +28,7 @@ export const styles = StyleSheet.create({
     marginBottom: 10,
   },
   formFieldView: {
-    marginBottom: 20,
+    marginBottom: 15,
   },
   dateInput: {
     flexDirection: 'row',
@@ -44,5 +44,12 @@ export const styles = StyleSheet.create({
   dateText: {
     fontSize: 15,
     color: '#999',
+  },
+  errorView: {
+    marginBottom: 15,
+  },
+  errorText: {
+    fontSize: 14,
+    color: RED,
   },
 });
