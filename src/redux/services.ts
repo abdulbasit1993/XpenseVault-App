@@ -62,6 +62,12 @@ export const apiService = createApi({
         body: body,
       }),
     }),
+    getExpensesOfUser: builder.query({
+      query: () => ({
+        url: `/expenses`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -73,4 +79,5 @@ export const {
   useResetPasswordMutation,
   useGetExpenseCategoriesQuery,
   useAddExpenseMutation,
+  useGetExpensesOfUserQuery,
 } = apiService;
