@@ -35,6 +35,7 @@ export function CustomDrawer(props) {
 
   const modifiedItems = props.state.routes
     .filter(route => route.name !== 'AddExpenseScreen')
+    .filter(route => route.name !== 'ExpenseDetailScreen')
     .map(route => {
       let label = route.name;
 

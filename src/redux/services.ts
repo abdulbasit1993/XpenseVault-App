@@ -68,6 +68,12 @@ export const apiService = createApi({
         method: 'GET',
       }),
     }),
+    getSingleExpense: builder.query({
+      query: id => ({
+        url: `/expenses/${id}`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -80,4 +86,5 @@ export const {
   useGetExpenseCategoriesQuery,
   useAddExpenseMutation,
   useGetExpensesOfUserQuery,
+  useGetSingleExpenseQuery,
 } = apiService;
