@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, FlatList} from 'react-native';
 import Header from '../../components/Header';
 import {styles} from '../../styles/ExpensesScreenStyles';
@@ -8,14 +8,16 @@ import ExpenseCard from '../../components/ExpenseCard';
 import FloatingActionButton from '../../components/FloatingActionButton';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import Spacer from '../../components/Spacer';
+import {useIsFocused} from '@react-navigation/native';
 
 const ExpensesScreen = ({navigation}) => {
-  let loading = true;
+  const isFocused = useIsFocused();
 
   const {
     data: expenseData,
     error,
     isLoading: isExpenseLoading,
+    refetch,
   } = useGetExpensesOfUserQuery({});
 
   const {data = []} = expenseData || {};
@@ -30,6 +32,12 @@ const ExpensesScreen = ({navigation}) => {
       />
     );
   };
+
+  useEffect(() => {
+    if (isFocused) {
+      refetch();
+    }
+  }, [isFocused, refetch]);
 
   return (
     <View style={styles.container}>

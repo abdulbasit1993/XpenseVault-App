@@ -4,6 +4,7 @@ import {styles} from '../../styles/SignUpStyles';
 import Header from '../../components/Header';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
+import CustomPasswordInput from '../../components/CustomPasswordInput';
 import {useNavigation} from '@react-navigation/native';
 import {
   validateName,
@@ -151,7 +152,7 @@ const SignUp = () => {
               <View style={styles.labelView}>
                 <Text style={styles.label}>Password:</Text>
               </View>
-              <CustomInput
+              <CustomPasswordInput
                 value={signUpFormData.password}
                 onChangeText={text => handleInputChange('password', text)}
                 placeholder={'Enter Your Password'}
@@ -169,7 +170,7 @@ const SignUp = () => {
               <View style={styles.labelView}>
                 <Text style={styles.label}>Confirm Password:</Text>
               </View>
-              <CustomInput
+              <CustomPasswordInput
                 value={confirmPassword}
                 onChangeText={text => setConfirmPassword(text)}
                 placeholder={'Re-enter Your Password'}
