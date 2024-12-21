@@ -37,7 +37,7 @@ const AddExpenseScreen = ({navigation}) => {
     title: '',
     description: '',
     date: null,
-    totalAmount: 0,
+    totalAmount: '',
     expenseCategoryId: null,
   });
 
@@ -111,9 +111,10 @@ const AddExpenseScreen = ({navigation}) => {
             title: '',
             description: '',
             date: null,
-            totalAmount: 0,
+            totalAmount: '',
             expenseCategoryId: null,
           });
+          setExpenseCategoryValue(null);
           navigation.navigate('ExpensesScreen');
         }
       } catch (error) {
