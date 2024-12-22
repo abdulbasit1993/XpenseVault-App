@@ -81,6 +81,14 @@ export const apiService = createApi({
         params: {id},
       }),
     }),
+    updateExpense: builder.mutation({
+      query: ({id, body}) => ({
+        url: '/expenses/update',
+        method: 'PUT',
+        params: {id},
+        body: body,
+      }),
+    }),
   }),
 });
 
@@ -95,4 +103,5 @@ export const {
   useGetExpensesOfUserQuery,
   useGetSingleExpenseQuery,
   useDeleteExpenseMutation,
+  useUpdateExpenseMutation,
 } = apiService;

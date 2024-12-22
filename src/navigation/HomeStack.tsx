@@ -4,6 +4,7 @@ import HomeScreen from '../screens/Home/HomeScreen';
 import AddExpenseScreen from '../screens/Home/AddExpenseScreen';
 import ExpensesScreen from '../screens/Home/ExpensesScreen';
 import ExpenseDetailScreen from '../screens/Home/ExpenseDetailScreen';
+import UpdateExpenseScreen from '../screens/Home/UpdateExpenseScreen';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 
 const HomeStack = () => {
@@ -32,6 +33,10 @@ const HomeStack = () => {
       <DrawerStack.Screen
         name="ExpenseDetailScreen"
         component={ExpenseDetailScreen}
+      />
+      <DrawerStack.Screen
+        name="UpdateExpenseScreen"
+        component={UpdateExpenseScreen}
       />
     </DrawerStack.Navigator>
   );

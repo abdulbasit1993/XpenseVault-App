@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, FlatList} from 'react-native';
 import Header from '../../components/Header';
 import {styles} from '../../styles/ExpenseDetailScreenStyles';
-import {useRoute} from '@react-navigation/native';
+import {useIsFocused, useRoute} from '@react-navigation/native';
 import {
   useDeleteExpenseMutation,
   useGetSingleExpenseQuery,
@@ -17,6 +17,7 @@ import FullScreenLoader from '../../components/FullScreenLoader';
 
 const ExpenseDetailScreen = ({navigation}) => {
   const route = useRoute();
+  const isFocused = useIsFocused();
 
   const {id: expenseId} = route?.params;
 
@@ -29,6 +30,7 @@ const ExpenseDetailScreen = ({navigation}) => {
     data: expenseData = {},
     error,
     isLoading,
+    refetch,
   } = useGetSingleExpenseQuery(expenseId);
 
   const [deleteExpense, {isLoading: isDeleteExpenseLoading}] =
@@ -62,6 +64,12 @@ const ExpenseDetailScreen = ({navigation}) => {
       showToast(message, 'error');
     }
   };
+
+  useEffect(() => {
+    if (isFocused) {
+      refetch();
+    }
+  }, [isFocused, refetch]);
 
   return (
     <View style={styles.container}>
@@ -99,7 +107,14 @@ const ExpenseDetailScreen = ({navigation}) => {
         <Spacer mT={20} />
 
         <View style={styles.buttonsRow}>
-          <CustomButton title="Update" onPress={() => {}} />
+          <CustomButton
+            title="Update"
+            onPress={() => {
+              navigation.navigate('UpdateExpenseScreen', {
+                expenseId: expenseId,
+              });
+            }}
+          />
 
           <CustomButton
             title="Delete"
