@@ -27,4 +27,9 @@ export const styles = StyleSheet.create({
     fontWeight: '700',
     color: Colors.BLACK,
   },
+  buttonsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
 });

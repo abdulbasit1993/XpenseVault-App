@@ -52,6 +52,21 @@ const ExpensesScreen = ({navigation}) => {
             <SkeletonPlaceholder borderRadius={10}>
               <SkeletonPlaceholder.Item width={'100%'} height={140} />
             </SkeletonPlaceholder>
+
+            <Spacer mT={15} />
+            <SkeletonPlaceholder borderRadius={10}>
+              <SkeletonPlaceholder.Item width={'100%'} height={140} />
+            </SkeletonPlaceholder>
+
+            <Spacer mT={15} />
+            <SkeletonPlaceholder borderRadius={10}>
+              <SkeletonPlaceholder.Item width={'100%'} height={140} />
+            </SkeletonPlaceholder>
+
+            <Spacer mT={15} />
+            <SkeletonPlaceholder borderRadius={10}>
+              <SkeletonPlaceholder.Item width={'100%'} height={140} />
+            </SkeletonPlaceholder>
           </>
         ) : (
           <FlatList

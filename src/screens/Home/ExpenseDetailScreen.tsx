@@ -1,16 +1,29 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, FlatList} from 'react-native';
 import Header from '../../components/Header';
 import {styles} from '../../styles/ExpenseDetailScreenStyles';
 import {useRoute} from '@react-navigation/native';
-import {useGetSingleExpenseQuery} from '../../redux/services';
+import {
+  useDeleteExpenseMutation,
+  useGetSingleExpenseQuery,
+} from '../../redux/services';
 import Spacer from '../../components/Spacer';
 import moment from 'moment';
+import CustomButton from '../../components/CustomButton';
+import {Colors} from '../../constants/colors';
+import DeleteConfirmModal from '../../components/DeleteConfirmModal';
+import {useToast} from '../../contexts/ToastContext';
+import FullScreenLoader from '../../components/FullScreenLoader';
 
 const ExpenseDetailScreen = ({navigation}) => {
   const route = useRoute();
 
   const {id: expenseId} = route?.params;
+
+  const {showToast} = useToast();
+
+  const [deleteConfirmModalVisible, setDeleteConfirmModalVisible] =
+    useState(false);
 
   const {
     data: expenseData = {},
@@ -18,7 +31,8 @@ const ExpenseDetailScreen = ({navigation}) => {
     isLoading,
   } = useGetSingleExpenseQuery(expenseId);
 
-  console.log('expense data ==>> ', expenseData);
+  const [deleteExpense, {isLoading: isDeleteExpenseLoading}] =
+    useDeleteExpenseMutation();
 
   const {
     title = '',
@@ -28,8 +42,30 @@ const ExpenseDetailScreen = ({navigation}) => {
     expenseCategory: {name = ''} = {},
   } = expenseData.data || {};
 
+  const handleDeleteExpense = async () => {
+    setDeleteConfirmModalVisible(false);
+
+    try {
+      const response = await deleteExpense(expenseId).unwrap();
+
+      if (response?.success) {
+        const {message} = response;
+        showToast(message, 'success');
+
+        navigation.navigate('ExpensesScreen');
+      }
+    } catch (error) {
+      const {
+        data: {message},
+      } = error;
+
+      showToast(message, 'error');
+    }
+  };
+
   return (
     <View style={styles.container}>
+      <FullScreenLoader loading={isDeleteExpenseLoading} />
       <Header title="Expense Detail" drawer />
 
       <View style={styles.subContainer}>
@@ -59,7 +95,31 @@ const ExpenseDetailScreen = ({navigation}) => {
           <Text style={{fontWeight: '700'}}>Rs. </Text>
           {totalAmount}
         </Text>
+
+        <Spacer mT={20} />
+
+        <View style={styles.buttonsRow}>
+          <CustomButton title="Update" onPress={() => {}} />
+
+          <CustomButton
+            title="Delete"
+            onPress={() => {
+              setDeleteConfirmModalVisible(true);
+            }}
+            customStyles={{backgroundColor: Colors.RED}}
+          />
+        </View>
       </View>
+
+      <DeleteConfirmModal
+        isModalVisible={deleteConfirmModalVisible}
+        onConfirmPress={() => {
+          handleDeleteExpense();
+        }}
+        onClosePress={() => {
+          setDeleteConfirmModalVisible(false);
+        }}
+      />
     </View>
   );
 };

@@ -9,6 +9,7 @@ export const styles = StyleSheet.create({
     backgroundColor: WHITE,
   },
   subContainer: {
+    flex: 1,
     paddingHorizontal: 18,
     paddingVertical: 18,
   },

@@ -74,6 +74,13 @@ export const apiService = createApi({
         method: 'GET',
       }),
     }),
+    deleteExpense: builder.mutation({
+      query: id => ({
+        url: `/expenses/delete`,
+        method: 'DELETE',
+        params: {id},
+      }),
+    }),
   }),
 });
 
@@ -87,4 +94,5 @@ export const {
   useAddExpenseMutation,
   useGetExpensesOfUserQuery,
   useGetSingleExpenseQuery,
+  useDeleteExpenseMutation,
 } = apiService;
