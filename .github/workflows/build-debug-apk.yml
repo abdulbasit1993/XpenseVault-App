@@ -1,0 +1,68 @@
+name: Build and Publish Debug APK
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Build Debug APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v2
+        with:
+          api-level: 31
+          build-tools: 31.0.0
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Debug APK
+        run: |
+          mkdir -p android/app/src/main/assets
+          npx react-native bundle --dev false --platform android --entry-file index.js --bundle-output ./android/app/src/main/assets/index.android.bundle --assets-dest ./android/app/src/main/res
+          cd android
+          ./gradlew assembleDebug
+
+      - name: Rename APK File
+        run: |
+          TAG_NAME=${GITHUB_REF##*/}
+          REPO_NAME=${{ github.repository }}
+          REPO_NAME=${REPO_NAME##*/}
+          mv android/app/build/outputs/apk/debug/app-debug.apk android/app/build/outputs/apk/debug/${REPO_NAME}-${TAG_NAME}.apk
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref##*/ }}
+          release_name: Release ${{ github.ref##*/ }}
+          body: |
+            This release includes the debug APK for tag ${{ github.ref##*/ }}.
+          draft: false
+          prerelease: true
+
+      - name: Upload APK to GitHub Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: android/app/build/outputs/apk/debug/${{ github.repository##*/ }}-${{ github.ref##*/ }}.apk
+          asset_name: ${{ github.repository##*/ }}-${{ github.ref##*/ }}.apk
+          asset_content_type: application/vnd.android.package-archive
