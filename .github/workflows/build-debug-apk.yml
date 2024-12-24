@@ -39,10 +39,13 @@ jobs:
           ./gradlew assembleDebug
 
       - name: Rename APK File
+        id: rename_apk
         run: |
           TAG_NAME=${GITHUB_REF#refs/tags/}
-          REPO_NAME=$(basename $GITHUB_REPOSITORY)
-          mv android/app/build/outputs/apk/debug/app-debug.apk android/app/build/outputs/apk/debug/${REPO_NAME}-${TAG_NAME}.apk
+          REPO_NAME=$(basename "$GITHUB_REPOSITORY")
+          APK_NAME="${REPO_NAME}-${TAG_NAME}.apk"
+          mv android/app/build/outputs/apk/debug/app-debug.apk android/app/build/outputs/apk/debug/$APK_NAME
+          echo "apk_name=$APK_NAME" >> $GITHUB_ENV
         env:
           GITHUB_REF: ${{ github.ref }}
           GITHUB_REPOSITORY: ${{ github.repository }}
@@ -64,6 +67,6 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: android/app/build/outputs/apk/debug/${{ steps.rename_apk.outputs.apk_name }}
-          asset_name: ${{ steps.rename_apk.outputs.apk_name }}
+          asset_path: android/app/build/outputs/apk/debug/${{ env.apk_name }}
+          asset_name: ${{ env.apk_name }}
           asset_content_type: application/vnd.android.package-archive
