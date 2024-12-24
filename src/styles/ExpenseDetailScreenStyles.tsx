@@ -9,7 +9,6 @@ export const styles = StyleSheet.create({
     backgroundColor: WHITE,
   },
   subContainer: {
-    flex: 1,
     paddingHorizontal: 18,
     paddingVertical: 18,
   },
@@ -17,5 +16,20 @@ export const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: '700',
     color: Colors.BLACK,
+  },
+  descriptionText: {
+    fontSize: 18,
+    fontWeight: '400',
+    color: Colors.BLACK,
+  },
+  labelText: {
+    fontSize: 21,
+    fontWeight: '700',
+    color: Colors.BLACK,
+  },
+  buttonsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
   },
 });

@@ -68,6 +68,27 @@ export const apiService = createApi({
         method: 'GET',
       }),
     }),
+    getSingleExpense: builder.query({
+      query: id => ({
+        url: `/expenses/${id}`,
+        method: 'GET',
+      }),
+    }),
+    deleteExpense: builder.mutation({
+      query: id => ({
+        url: `/expenses/delete`,
+        method: 'DELETE',
+        params: {id},
+      }),
+    }),
+    updateExpense: builder.mutation({
+      query: ({id, body}) => ({
+        url: '/expenses/update',
+        method: 'PUT',
+        params: {id},
+        body: body,
+      }),
+    }),
   }),
 });
 
@@ -80,4 +101,7 @@ export const {
   useGetExpenseCategoriesQuery,
   useAddExpenseMutation,
   useGetExpensesOfUserQuery,
+  useGetSingleExpenseQuery,
+  useDeleteExpenseMutation,
+  useUpdateExpenseMutation,
 } = apiService;

@@ -3,6 +3,7 @@ import {View, Text, Pressable, Keyboard, TouchableOpacity} from 'react-native';
 import {styles} from '../../styles/SignInStyles';
 import Header from '../../components/Header';
 import CustomInput from '../../components/CustomInput';
+import CustomPasswordInput from '../../components/CustomPasswordInput';
 import CustomButton from '../../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import {validateEmail, validatePassword} from '../../utils/validations';
@@ -124,7 +125,7 @@ const SignIn = () => {
             <View style={styles.labelView}>
               <Text style={styles.label}>Password:</Text>
             </View>
-            <CustomInput
+            <CustomPasswordInput
               value={signInFormData.password}
               onChangeText={text => handleInputChange('password', text)}
               placeholder={'Enter Your Password'}

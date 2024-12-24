@@ -5,15 +5,23 @@ const {PRIMARY, WHITE, BLACK} = Colors;
 
 export const styles = StyleSheet.create({
   container: {
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: 10,
+    justifyContent: 'space-between',
     borderWidth: 3,
     borderColor: PRIMARY,
     borderRadius: 10,
     width: '100%',
   },
+  inputView: {
+    width: '88%',
+  },
+
   input: {
-    width: '100%',
     color: BLACK,
-    textAlign: 'left',
+  },
+  eyeIconView: {
+    width: '10%',
   },
 });

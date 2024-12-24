@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity, Keyboard, ScrollView} from 'react-native';
-import {styles} from '../../styles/AddExpenseScreenStyles';
+import {styles} from '../../styles/UpdateExpenseScreenStyles';
 import Header from '../../components/Header';
 import CustomInput from '../../components/CustomInput';
-import Spacer from '../../components/Spacer';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {
-  useAddExpenseMutation,
   useGetExpenseCategoriesQuery,
+  useGetSingleExpenseQuery,
+  useUpdateExpenseMutation,
 } from '../../redux/services';
 import {Colors} from '../../constants/colors';
 import CustomButton from '../../components/CustomButton';
@@ -21,8 +21,13 @@ import {
 } from '../../utils/validations';
 import {useToast} from '../../contexts/ToastContext';
 import FullScreenLoader from '../../components/FullScreenLoader';
+import {useRoute} from '@react-navigation/native';
 
-const AddExpenseScreen = ({navigation}) => {
+const UpdateExpenseScreen = ({navigation}) => {
+  const route = useRoute();
+
+  const {expenseId} = route?.params;
+
   const {
     data,
     error,
@@ -55,8 +60,14 @@ const AddExpenseScreen = ({navigation}) => {
     expenseCategoryError: '',
   });
 
-  const [addExpense, {isLoading: isAddExpenseLoading}] =
-    useAddExpenseMutation();
+  const [updateExpense, {isLoading: isUpdateExpenseLoading}] =
+    useUpdateExpenseMutation();
+
+  const {
+    data: expenseData = {},
+    error: getSingleExpenseError,
+    isLoading,
+  } = useGetSingleExpenseQuery(expenseId);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -84,7 +95,7 @@ const AddExpenseScreen = ({navigation}) => {
     }));
   };
 
-  const handleSubmit = async () => {
+  const handleUpdateExpense = async () => {
     Keyboard.dismiss();
     const titleError = validateTitle(newExpenseData.title);
     const dateError = validateDate(newExpenseData.date);
@@ -102,7 +113,20 @@ const AddExpenseScreen = ({navigation}) => {
 
     if (!titleError && !dateError && !amountError && !expenseCategoryError) {
       try {
-        const response = await addExpense(newExpenseData).unwrap();
+        let amount = parseFloat(newExpenseData?.totalAmount);
+
+        let updateExpensePayload = {
+          title: newExpenseData?.title,
+          description: newExpenseData?.description,
+          date: newExpenseData?.date,
+          totalAmount: amount,
+          expenseCategoryId: newExpenseData?.expenseCategoryId,
+        };
+
+        const response = await updateExpense({
+          id: expenseId,
+          body: updateExpensePayload,
+        }).unwrap();
 
         if (response?.success) {
           const {message} = response;
@@ -144,10 +168,32 @@ const AddExpenseScreen = ({navigation}) => {
     }
   }, [expenseCategoriesData]);
 
+  useEffect(() => {
+    if (expenseData) {
+      const {
+        title = '',
+        description = '',
+        date = '',
+        totalAmount = 0,
+        expenseCategory: {name = '', id} = {},
+      } = expenseData?.data || {};
+
+      setNewExpenseData({
+        title,
+        description,
+        date,
+        totalAmount: totalAmount.toString(),
+        expenseCategoryId: id,
+      });
+
+      setExpenseCategoryValue(id);
+    }
+  }, [expenseData]);
+
   return (
     <View style={styles.container}>
-      <FullScreenLoader loading={isAddExpenseLoading} />
-      <Header title="Add Expense" backIcon />
+      <FullScreenLoader loading={isUpdateExpenseLoading} />
+      <Header title="Update Expense" backIcon />
 
       <ScrollView>
         <View style={styles.subContainer}>
@@ -262,9 +308,9 @@ const AddExpenseScreen = ({navigation}) => {
           </View>
 
           <CustomButton
-            title="Submit"
+            title="Update"
             onPress={() => {
-              handleSubmit();
+              handleUpdateExpense();
             }}
           />
         </View>
@@ -280,4 +326,4 @@ const AddExpenseScreen = ({navigation}) => {
   );
 };
 
-export default AddExpenseScreen;
+export default UpdateExpenseScreen;
