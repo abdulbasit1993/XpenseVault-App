@@ -41,28 +41,32 @@ jobs:
           cd android
           ./gradlew assembleDebug
 
-      - name: Rename APK File
-        run: |
-          TAG_NAME=${GITHUB_REF##*/}
-          REPO_NAME=${{ github.repository }}
-          REPO_NAME=${REPO_NAME##*/}
-          mv android/app/build/outputs/apk/debug/app-debug.apk android/app/build/outputs/apk/debug/${REPO_NAME}-${TAG_NAME}.apk
+          - name: Rename APK File
+          run: |
+            TAG_NAME=${GITHUB_REF#refs/tags/}
+            REPO_NAME=$(basename $GITHUB_REPOSITORY)
+            mv android/app/build/outputs/apk/debug/app-debug.apk android/app/build/outputs/apk/debug/${REPO_NAME}-${TAG_NAME}.apk
+          env:
+            GITHUB_REF: ${{ github.ref }}
+            GITHUB_REPOSITORY: ${{ github.repository }}
 
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         with:
-          tag_name: ${{ github.ref##*/ }}
-          release_name: Release ${{ github.ref##*/ }}
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
           body: |
-            This release includes the debug APK for tag ${{ github.ref##*/ }}.
+            This release includes the debug APK for tag ${{ github.ref_name }}.
           draft: false
-          prerelease: true
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload APK to GitHub Release
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: android/app/build/outputs/apk/debug/${{ github.repository##*/ }}-${{ github.ref##*/ }}.apk
-          asset_name: ${{ github.repository##*/ }}-${{ github.ref##*/ }}.apk
+          asset_path: android/app/build/outputs/apk/debug/${{ steps.rename_apk.outputs.apk_name }}
+          asset_name: ${{ steps.rename_apk.outputs.apk_name }}
           asset_content_type: application/vnd.android.package-archive
