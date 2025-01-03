@@ -17,11 +17,16 @@ import {useSignUpMutation} from '../../redux/services';
 import {useToast} from '../../contexts/ToastContext';
 import {storeData} from '../../utils/storageService';
 import {resetStack} from '../../navigation/navigationService';
+import {useSelector} from 'react-redux';
+import {Colors} from '../../constants/colors';
+import AppText from '../../components/AppText';
 
 const SignUp = () => {
   const navigation = useNavigation();
 
   const [signUp, {isLoading: isSignUpLoading}] = useSignUpMutation();
+
+  const isDarkMode = useSelector(state => state.theme.isDarkMode);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -94,34 +99,41 @@ const SignUp = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {backgroundColor: isDarkMode ? Colors.BLACK : Colors.WHITE},
+      ]}>
       <FullScreenLoader loading={isLoading} />
-      <Header title="Sign Up" />
+      <Header title="Sign Up" themeSwitch />
 
       <ScrollView>
         <View style={styles.subcontainer}>
           <View style={styles.headingContainer}>
-            <Text style={styles.headingText}>
-              Welcome to <Text style={styles.boldText}>XpenseVault!</Text>
-            </Text>
+            <AppText style={styles.headingText}>
+              Welcome to <AppText style={styles.boldText}>XpenseVault!</AppText>
+            </AppText>
 
             <View style={styles.subheadingView}>
-              <Text style={styles.subheadingText}>
+              <AppText style={styles.subheadingText}>
                 Create your account to continue to{' '}
-                <Text style={styles.boldText}>XpenseVault</Text>
-              </Text>
+                <AppText style={styles.boldText}>XpenseVault</AppText>
+              </AppText>
             </View>
           </View>
 
           <View style={styles.formView}>
             <View style={styles.formFieldView}>
               <View style={styles.labelView}>
-                <Text style={styles.label}>Full Name:</Text>
+                <AppText style={styles.label}>Full Name:</AppText>
               </View>
               <CustomInput
                 value={signUpFormData.name}
                 onChangeText={text => handleInputChange('name', text)}
                 placeholder={'Enter Your Full Name'}
+                customInputStyles={{
+                  color: isDarkMode ? Colors.WHITE : Colors.BLACK,
+                }}
               />
 
               {errors.nameError && (
@@ -133,12 +145,15 @@ const SignUp = () => {
 
             <View style={styles.formFieldView}>
               <View style={styles.labelView}>
-                <Text style={styles.label}>Email:</Text>
+                <AppText style={styles.label}>Email:</AppText>
               </View>
               <CustomInput
                 value={signUpFormData.email}
                 onChangeText={text => handleInputChange('email', text)}
                 placeholder={'Enter Your Email'}
+                customInputStyles={{
+                  color: isDarkMode ? Colors.WHITE : Colors.BLACK,
+                }}
               />
 
               {errors.emailError && (
@@ -150,13 +165,16 @@ const SignUp = () => {
 
             <View style={styles.formFieldView}>
               <View style={styles.labelView}>
-                <Text style={styles.label}>Password:</Text>
+                <AppText style={styles.label}>Password:</AppText>
               </View>
               <CustomPasswordInput
                 value={signUpFormData.password}
                 onChangeText={text => handleInputChange('password', text)}
                 placeholder={'Enter Your Password'}
                 type="password"
+                customInputStyles={{
+                  color: isDarkMode ? Colors.WHITE : Colors.BLACK,
+                }}
               />
 
               {errors.passwordError && (
@@ -168,13 +186,16 @@ const SignUp = () => {
 
             <View style={styles.formFieldView}>
               <View style={styles.labelView}>
-                <Text style={styles.label}>Confirm Password:</Text>
+                <AppText style={styles.label}>Confirm Password:</AppText>
               </View>
               <CustomPasswordInput
                 value={confirmPassword}
                 onChangeText={text => setConfirmPassword(text)}
                 placeholder={'Re-enter Your Password'}
                 type="password"
+                customInputStyles={{
+                  color: isDarkMode ? Colors.WHITE : Colors.BLACK,
+                }}
               />
 
               {errors.confirmPasswordError && (
@@ -196,9 +217,11 @@ const SignUp = () => {
             </View>
 
             <View style={styles.footerView}>
-              <Text style={styles.footerText}>Already have an account?</Text>
+              <AppText style={styles.footerText}>
+                Already have an account?
+              </AppText>
               <Pressable onPress={() => navigation.navigate('SignIn')}>
-                <Text style={styles.signUpText}>Sign In Here</Text>
+                <AppText style={styles.signUpText}>Sign In Here</AppText>
               </Pressable>
             </View>
           </View>
