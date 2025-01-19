@@ -37,6 +37,7 @@ export function CustomDrawer(props) {
     .filter(route => route.name !== 'AddExpenseScreen')
     .filter(route => route.name !== 'ExpenseDetailScreen')
     .filter(route => route.name !== 'UpdateExpenseScreen')
+    .filter(route => route.name !== 'TransactionsScreen')
     .map(route => {
       let label = route.name;
 

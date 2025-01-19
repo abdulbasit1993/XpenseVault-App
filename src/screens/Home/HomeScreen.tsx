@@ -12,6 +12,12 @@ const HomeScreen = ({navigation}) => {
       <View style={styles.subContainer}>
         <Text style={styles.titleText}>Recent Transactions</Text>
       </View>
+
+      <FloatingActionButton
+        onPress={() => {
+          navigation.navigate('TransactionsScreen');
+        }}
+      />
     </View>
   );
 };
