@@ -21,6 +21,7 @@ export const styles = StyleSheet.create({
   },
   formView: {
     marginTop: 35,
+    paddingHorizontal: 30,
   },
   label: {
     color: PRIMARY,
@@ -57,5 +58,21 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     color: PRIMARY,
+  },
+  codeFieldRoot: {
+    marginTop: 20,
+  },
+  cell: {
+    width: 50,
+    height: 50,
+    lineHeight: 46,
+    fontSize: 24,
+    borderWidth: 2,
+    borderColor: Colors.WHITE,
+    borderRadius: 10,
+    textAlign: 'center',
+  },
+  focusCell: {
+    borderColor: PRIMARY,
   },
 });
