@@ -9,11 +9,16 @@ import {validateEmail} from '../../utils/validations';
 import {useForgotPasswordMutation} from '../../redux/services';
 import {useNavigation} from '@react-navigation/native';
 import {useToast} from '../../contexts/ToastContext';
+import {useSelector} from 'react-redux';
+import {Colors} from '../../constants/colors';
+import AppText from '../../components/AppText';
 
 const ForgotPassword = () => {
   const navigation = useNavigation();
 
   const [forgotPassword, {isLoading}] = useForgotPasswordMutation();
+
+  const isDarkMode = useSelector(state => state.theme.isDarkMode);
 
   const [forgotPassFormData, setForgotPassFormData] = useState({
     email: '',
@@ -66,26 +71,33 @@ const ForgotPassword = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {backgroundColor: isDarkMode ? Colors.BLACK : Colors.WHITE},
+      ]}>
       <FullScreenLoader loading={isLoading} />
       <Header title="Forgot Password" />
 
       <View style={styles.subcontainer}>
         <View style={styles.headingContainer}>
-          <Text style={styles.headingText}>
+          <AppText style={styles.headingText}>
             Enter Your Email to Proceed to Reset Your Password
-          </Text>
+          </AppText>
         </View>
 
         <View style={styles.formView}>
           <View style={styles.formFieldView}>
             <View style={styles.labelView}>
-              <Text style={styles.label}>Email:</Text>
+              <AppText style={styles.label}>Email:</AppText>
             </View>
             <CustomInput
               value={forgotPassFormData.email}
               onChangeText={text => handleInputChange('email', text)}
               placeholder={'Enter Your Email'}
+              customInputStyles={{
+                color: isDarkMode ? Colors.WHITE : Colors.BLACK,
+              }}
             />
 
             {errors.emailError && (

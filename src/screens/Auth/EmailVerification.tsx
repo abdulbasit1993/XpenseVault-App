@@ -11,6 +11,9 @@ import {
   useValidateOTPMutation,
 } from '../../redux/services';
 import {useToast} from '../../contexts/ToastContext';
+import {useSelector} from 'react-redux';
+import {Colors} from '../../constants/colors';
+import AppText from '../../components/AppText';
 
 const EmailVerification = () => {
   const route = useRoute();
@@ -23,6 +26,7 @@ const EmailVerification = () => {
     useForgotPasswordMutation();
   const [validateOTP, {isLoading: isValidateOTPloading}] =
     useValidateOTPMutation();
+  const isDarkMode = useSelector(state => state.theme.isDarkMode);
 
   const [code, setCode] = useState('');
   const [timer, setTimer] = useState(360);
@@ -104,7 +108,11 @@ const EmailVerification = () => {
   }, [timer]);
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {backgroundColor: isDarkMode ? Colors.BLACK : Colors.WHITE},
+      ]}>
       <FullScreenLoader
         loading={isValidateOTPloading || isForgotPasswordLoading}
       />
@@ -112,9 +120,9 @@ const EmailVerification = () => {
 
       <View style={styles.subcontainer}>
         <View style={styles.headingContainer}>
-          <Text style={styles.headingText}>
+          <AppText style={styles.headingText}>
             {`A 4-digit OTP Code has been sent to ${email}. \nPlease enter it below to continue resetting your password.`}
-          </Text>
+          </AppText>
         </View>
 
         <View style={styles.formView}>
@@ -122,13 +130,13 @@ const EmailVerification = () => {
 
           <View style={styles.timerContainer}>
             {timer > 0 ? (
-              <Text
+              <AppText
                 style={
                   styles.timerText
-                }>{`Resend code in ${formatTime()}`}</Text>
+                }>{`Resend code in ${formatTime()}`}</AppText>
             ) : (
               <Pressable onPress={() => handleResendCode()}>
-                <Text style={styles.resendCodeText}>Resend Code</Text>
+                <AppText style={styles.resendCodeText}>Resend Code</AppText>
               </Pressable>
             )}
           </View>

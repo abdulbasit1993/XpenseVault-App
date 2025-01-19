@@ -12,14 +12,17 @@ import FullScreenLoader from '../../components/FullScreenLoader';
 import {useToast} from '../../contexts/ToastContext';
 import {storeData} from '../../utils/storageService';
 import {resetStack} from '../../navigation/navigationService';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {setError, setLoading, setUser} from '../../redux/slices/authSlice';
+import {Colors} from '../../constants/colors';
+import AppText from '../../components/AppText';
 
 const SignIn = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
   const [signIn, {isLoading}] = useSignInMutation();
+  const isDarkMode = useSelector(state => state.theme.isDarkMode);
 
   const [signInFormData, setSignInFormData] = useState({
     email: '',
@@ -85,33 +88,40 @@ const SignIn = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {backgroundColor: isDarkMode ? Colors.BLACK : Colors.WHITE},
+      ]}>
       <FullScreenLoader loading={isLoading} />
-      <Header title="Sign In" />
+      <Header title="Sign In" themeSwitch />
 
       <View style={styles.subcontainer}>
         <View style={styles.headingContainer}>
-          <Text style={styles.headingText}>
-            Welcome to <Text style={styles.boldText}>XpenseVault!</Text>
-          </Text>
+          <AppText style={styles.headingText}>
+            Welcome to <AppText style={styles.boldText}>XpenseVault!</AppText>
+          </AppText>
 
           <View style={styles.subheadingView}>
-            <Text style={styles.subheadingText}>
+            <AppText style={styles.subheadingText}>
               Please sign in to continue to{' '}
-              <Text style={styles.boldText}>XpenseVault</Text>
-            </Text>
+              <AppText style={styles.boldText}>XpenseVault</AppText>
+            </AppText>
           </View>
         </View>
 
         <View style={styles.formView}>
           <View style={styles.formFieldView}>
             <View style={styles.labelView}>
-              <Text style={styles.label}>Email:</Text>
+              <AppText style={styles.label}>Email:</AppText>
             </View>
             <CustomInput
               value={signInFormData.email}
               onChangeText={text => handleInputChange('email', text)}
               placeholder={'Enter Your Email'}
+              customInputStyles={{
+                color: isDarkMode ? Colors.WHITE : Colors.BLACK,
+              }}
             />
 
             {errors.emailError && (
@@ -123,13 +133,16 @@ const SignIn = () => {
 
           <View style={styles.formFieldView}>
             <View style={styles.labelView}>
-              <Text style={styles.label}>Password:</Text>
+              <AppText style={styles.label}>Password:</AppText>
             </View>
             <CustomPasswordInput
               value={signInFormData.password}
               onChangeText={text => handleInputChange('password', text)}
               placeholder={'Enter Your Password'}
               type="password"
+              customInputStyles={{
+                color: isDarkMode ? Colors.WHITE : Colors.BLACK,
+              }}
             />
 
             {errors.passwordError && (
@@ -142,7 +155,7 @@ const SignIn = () => {
           <TouchableOpacity
             onPress={() => navigation.navigate('ForgotPassword')}
             style={styles.forgotPassView}>
-            <Text style={styles.forgotPassText}>Forgot Password?</Text>
+            <AppText style={styles.forgotPassText}>Forgot Password?</AppText>
           </TouchableOpacity>
 
           <View style={styles.buttonView}>
@@ -155,9 +168,9 @@ const SignIn = () => {
           </View>
 
           <View style={styles.footerView}>
-            <Text style={styles.footerText}>Don't have an account?</Text>
+            <AppText style={styles.footerText}>Don't have an account?</AppText>
             <Pressable onPress={() => navigation.navigate('SignUp')}>
-              <Text style={styles.signUpText}>Sign Up Here</Text>
+              <AppText style={styles.signUpText}>Sign Up Here</AppText>
             </Pressable>
           </View>
         </View>

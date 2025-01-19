@@ -12,10 +12,14 @@ import {
 } from '../../utils/validations';
 import {useResetPasswordMutation} from '../../redux/services';
 import {useToast} from '../../contexts/ToastContext';
+import {useSelector} from 'react-redux';
+import {Colors} from '../../constants/colors';
+import AppText from '../../components/AppText';
 
 const ResetPassword = () => {
   const route = useRoute();
   const navigation = useNavigation();
+  const isDarkMode = useSelector(state => state.theme.isDarkMode);
   const {
     params: {email},
   } = route;
@@ -68,26 +72,33 @@ const ResetPassword = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {backgroundColor: isDarkMode ? Colors.BLACK : Colors.WHITE},
+      ]}>
       <FullScreenLoader loading={isResetPasswordLoading} />
       <Header title="Reset Password" />
 
       <View style={styles.subcontainer}>
         <View style={styles.headingContainer}>
-          <Text style={styles.headingText}>
+          <AppText style={styles.headingText}>
             {`Enter Your New Password for \n ${email}`}
-          </Text>
+          </AppText>
         </View>
 
         <View style={styles.formFieldView}>
           <View style={styles.labelView}>
-            <Text style={styles.label}>Password:</Text>
+            <AppText style={styles.label}>Password:</AppText>
           </View>
           <CustomInput
             value={password}
             onChangeText={text => setPassword(text)}
             placeholder={'Enter Your Password'}
             type="password"
+            customInputStyles={{
+              color: isDarkMode ? Colors.WHITE : Colors.BLACK,
+            }}
           />
 
           {errors.passwordError && (
@@ -99,13 +110,16 @@ const ResetPassword = () => {
 
         <View style={styles.formFieldView}>
           <View style={styles.labelView}>
-            <Text style={styles.label}>Confirm Password:</Text>
+            <AppText style={styles.label}>Confirm Password:</AppText>
           </View>
           <CustomInput
             value={confirmPassword}
             onChangeText={text => setConfirmPassword(text)}
             placeholder={'Re-enter Your Password'}
             type="password"
+            customInputStyles={{
+              color: isDarkMode ? Colors.WHITE : Colors.BLACK,
+            }}
           />
 
           {errors.confirmPasswordError && (

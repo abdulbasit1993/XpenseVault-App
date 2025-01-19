@@ -9,18 +9,19 @@ import {
   Dimensions,
 } from 'react-native';
 import {Colors} from '../constants/colors';
+import AppText from './AppText';
 
 const CODE_LENGTH = 4;
 
 const CodeInput = ({code, setCode}) => {
   const ref = useRef<TextInput>(null);
-  const [containerIsFocused, setContainerIsFocused] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   const {width: DEVICE_WIDTH, height: DEVICE_HEIGHT} = Dimensions.get('window');
 
   const codeDigitsArray = new Array(CODE_LENGTH).fill(0);
 
-  const BOX_WIDTH = DEVICE_WIDTH * 0.1;
+  const BOX_WIDTH = DEVICE_WIDTH * 0.11;
   const BOX_HEIGHT = DEVICE_HEIGHT * 0.075;
 
   const toDigitInput = (_value: number, idx: number) => {
@@ -34,7 +35,7 @@ const CodeInput = ({code, setCode}) => {
     const isFocused = isCurrentDigit || (isLastDigit && isCodeFull);
 
     const containerStyle =
-      containerIsFocused && isFocused
+      isFocused && isFocused
         ? {
             ...styles.inputContainer,
             ...styles.inputContainerFocused,
@@ -45,18 +46,22 @@ const CodeInput = ({code, setCode}) => {
 
     return (
       <View key={idx} style={containerStyle}>
-        <Text style={styles.inputText}>{digit}</Text>
+        <AppText style={styles.inputText}>{digit}</AppText>
       </View>
     );
   };
 
   const handleOnPress = () => {
-    setContainerIsFocused(true);
+    setIsFocused(true);
     ref?.current?.focus();
   };
 
+  const handleOnFocus = () => {
+    setIsFocused(true);
+  };
+
   const handleOnBlur = () => {
-    setContainerIsFocused(false);
+    setIsFocused(false);
   };
 
   return (
@@ -68,7 +73,8 @@ const CodeInput = ({code, setCode}) => {
         ref={ref}
         value={code}
         onChangeText={setCode}
-        onSubmitEditing={handleOnBlur}
+        onFocus={handleOnFocus}
+        onBlur={handleOnBlur}
         keyboardType="number-pad"
         returnKeyType="done"
         textContentType="oneTimeCode"
@@ -100,7 +106,6 @@ const styles = StyleSheet.create({
     borderColor: '#cccccc',
     borderWidth: 2,
     borderRadius: 4,
-    padding: 12,
     alignItems: 'center',
     justifyContent: 'center',
   },
