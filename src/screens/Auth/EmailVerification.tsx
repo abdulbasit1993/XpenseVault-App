@@ -14,6 +14,12 @@ import {useToast} from '../../contexts/ToastContext';
 import {useSelector} from 'react-redux';
 import {Colors} from '../../constants/colors';
 import AppText from '../../components/AppText';
+import {
+  CodeField,
+  Cursor,
+  useBlurOnFulfill,
+  useClearByFocusCell,
+} from 'react-native-confirmation-code-field';
 
 const EmailVerification = () => {
   const route = useRoute();
@@ -28,9 +34,17 @@ const EmailVerification = () => {
     useValidateOTPMutation();
   const isDarkMode = useSelector(state => state.theme.isDarkMode);
 
-  const [code, setCode] = useState('');
+  const CODE_LENGTH = 4;
+
+  const [value, setValue] = useState('');
   const [timer, setTimer] = useState(360);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
+
+  const ref = useBlurOnFulfill({value, cellCount: CODE_LENGTH});
+  const [props, getCellOnLayoutHandler] = useClearByFocusCell({
+    value,
+    setValue,
+  });
 
   const {showToast} = useToast();
 
@@ -68,13 +82,13 @@ const EmailVerification = () => {
   const handleSubmit = async () => {
     Keyboard.dismiss();
 
-    if (!code) {
+    if (!value) {
       return showToast('Please enter code first', 'error');
     }
 
     const payload = {
       email: email,
-      otp: code,
+      otp: value,
     };
 
     try {
@@ -126,7 +140,27 @@ const EmailVerification = () => {
         </View>
 
         <View style={styles.formView}>
-          <CodeInput code={code} setCode={setCode} />
+          {/* <CodeInput code={code} setCode={setCode} /> */}
+
+          <CodeField
+            ref={ref}
+            {...props}
+            value={value}
+            onChangeText={setValue}
+            cellCount={CODE_LENGTH}
+            rootStyle={styles.codeFieldRoot}
+            keyboardType="number-pad"
+            textContentType="oneTimeCode"
+            textInputStyle={{textAlign: 'center', alignSelf: 'center'}}
+            renderCell={({index, symbol, isFocused}) => (
+              <Text
+                key={index}
+                style={[styles.cell, isFocused && styles.focusCell]}
+                onLayout={getCellOnLayoutHandler(index)}>
+                {symbol || (isFocused ? <Cursor /> : null)}
+              </Text>
+            )}
+          />
 
           <View style={styles.timerContainer}>
             {timer > 0 ? (
