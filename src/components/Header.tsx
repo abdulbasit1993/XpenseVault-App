@@ -19,8 +19,6 @@ const Header: React.FC<HeaderProps> = ({
   const dispatch = useDispatch();
   const isDarkMode = useSelector(state => state.theme.isDarkMode);
 
-  console.log('isDarkMode ==>> ', isDarkMode);
-
   return (
     <View style={styles.container}>
       <View style={styles.leftView}>

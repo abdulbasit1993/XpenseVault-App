@@ -1,2 +1,1 @@
-export const baseUrl: string =
-  'https://expense-tracker-backend-production-41e6.up.railway.app/api';
+export const baseUrl: string = 'http://152.70.146.40:3002/api';
