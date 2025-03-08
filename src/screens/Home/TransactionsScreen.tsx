@@ -4,6 +4,8 @@ import PagerView from 'react-native-pager-view';
 import Header from '../../components/Header';
 import {styles} from '../../styles/TransactionsScreenStyles';
 import {Colors} from '../../constants/colors';
+import AddExpenseScreen from './AddExpenseScreen';
+import AddIncomeScreen from './AddIncomeScreen';
 
 const TransactionsScreen = () => {
   const [pageIndex, setPageIndex] = useState(0);
@@ -34,21 +36,13 @@ const TransactionsScreen = () => {
           ))}
         </View>
 
-        <PagerView style={{flex: 1}} initialPage={0}>
-          {pageIndex === 0 ? (
-            <View key={1}>
-              <Text style={{color: Colors.BLACK, fontSize: 16}}>
-                First page
-              </Text>
-            </View>
-          ) : pageIndex === 1 ? (
-            <View key={2}>
-              <Text>Second page</Text>
-            </View>
-          ) : (
-            <></>
-          )}
-        </PagerView>
+        {pageIndex === 0 ? (
+          <AddExpenseScreen />
+        ) : pageIndex === 1 ? (
+          <AddIncomeScreen />
+        ) : (
+          <></>
+        )}
       </View>
     </View>
   );

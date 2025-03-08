@@ -89,6 +89,19 @@ export const apiService = createApi({
         body: body,
       }),
     }),
+    getIncomeCategories: builder.query({
+      query: () => ({
+        url: '/income-categories',
+        method: 'GET',
+      }),
+    }),
+    addIncome: builder.mutation({
+      query: body => ({
+        url: `/income/add`,
+        method: 'POST',
+        body: body,
+      }),
+    }),
   }),
 });
 
@@ -104,4 +117,6 @@ export const {
   useGetSingleExpenseQuery,
   useDeleteExpenseMutation,
   useUpdateExpenseMutation,
+  useGetIncomeCategoriesQuery,
+  useAddIncomeMutation,
 } = apiService;

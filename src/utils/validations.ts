@@ -62,3 +62,10 @@ export const validateExpenseCategory = cat => {
   }
   return '';
 };
+
+export const validateIncomeCategory = cat => {
+  if (!cat) {
+    return 'Income Category is Required';
+  }
+  return '';
+};

@@ -1,13 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity, Keyboard, ScrollView} from 'react-native';
-import {styles} from '../../styles/AddExpenseScreenStyles';
+import {styles} from '../../styles/AddIncomeScreenStyles';
 import Header from '../../components/Header';
 import CustomInput from '../../components/CustomInput';
 import Spacer from '../../components/Spacer';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {
   useAddExpenseMutation,
-  useGetExpenseCategoriesQuery,
+  useAddIncomeMutation,
+  useGetIncomeCategoriesQuery,
 } from '../../redux/services';
 import {Colors} from '../../constants/colors';
 import CustomButton from '../../components/CustomButton';
@@ -17,34 +18,35 @@ import {
   validateAmount,
   validateDate,
   validateExpenseCategory,
+  validateIncomeCategory,
   validateTitle,
 } from '../../utils/validations';
 import {useToast} from '../../contexts/ToastContext';
 import FullScreenLoader from '../../components/FullScreenLoader';
 
-const AddExpenseScreen = ({navigation}) => {
+const AddIncomeScreen = ({navigation}) => {
   const {
     data,
     error,
-    isLoading: isExpenseCategoryLoading,
-  } = useGetExpenseCategoriesQuery({});
+    isLoading: isIncomeCategoryLoading,
+  } = useGetIncomeCategoriesQuery({});
 
-  const {data: expenseCategoriesData} = data || {};
+  const {data: incomeCategoriesData} = data || {};
 
   const {showToast} = useToast();
 
-  const [newExpenseData, setNewExpenseData] = useState({
+  const [newIncomeData, setNewIncomeData] = useState({
     title: '',
     description: '',
     date: null,
-    totalAmount: '',
-    expenseCategoryId: null,
+    amount: '',
+    incomeSourceId: null,
   });
 
-  const [openExpenseCategory, setOpenExpenseCategory] = useState(false);
-  const [expenseCategoryValue, setExpenseCategoryValue] = useState(null);
+  const [openIncomeCategory, setOpenIncomeCategory] = useState(false);
+  const [incomeCategoryValue, setIncomeCategoryValue] = useState(null);
 
-  const [expenseCategoryItems, setExpenseCategoryItems] = useState([]);
+  const [incomeCategoryItems, setIncomeCategoryItems] = useState([]);
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
@@ -52,11 +54,10 @@ const AddExpenseScreen = ({navigation}) => {
     titleError: '',
     dateError: '',
     amountError: '',
-    expenseCategoryError: '',
+    incomeCategoryError: '',
   });
 
-  const [addExpense, {isLoading: isAddExpenseLoading}] =
-    useAddExpenseMutation();
+  const [addIncome, {isLoading: isAddIncomeLoading}] = useAddIncomeMutation();
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -67,7 +68,7 @@ const AddExpenseScreen = ({navigation}) => {
   };
 
   const handleConfirm = date => {
-    setNewExpenseData(prevState => ({
+    setNewIncomeData(prevState => ({
       ...prevState,
       date: date,
     }));
@@ -75,10 +76,10 @@ const AddExpenseScreen = ({navigation}) => {
   };
 
   const handleInputChange = (key, value) => {
-    if (key === 'totalAmount') {
+    if (key === 'amount') {
       value = parseFloat(value) || 0;
     }
-    setNewExpenseData(prevState => ({
+    setNewIncomeData(prevState => ({
       ...prevState,
       [key]: value,
     }));
@@ -86,41 +87,43 @@ const AddExpenseScreen = ({navigation}) => {
 
   const handleSubmit = async () => {
     Keyboard.dismiss();
-    const titleError = validateTitle(newExpenseData.title);
-    const dateError = validateDate(newExpenseData.date);
-    const amountError = validateAmount(newExpenseData.totalAmount);
-    const expenseCategoryError = validateExpenseCategory(
-      newExpenseData.expenseCategoryId,
+    const titleError = validateTitle(newIncomeData.title);
+    const dateError = validateDate(newIncomeData.date);
+    const amountError = validateAmount(newIncomeData.amount);
+    const incomeCategoryError = validateIncomeCategory(
+      newIncomeData.incomeSourceId,
     );
 
     setErrors({
       titleError: titleError,
       dateError: dateError,
       amountError: amountError,
-      expenseCategoryError: expenseCategoryError,
+      incomeCategoryError: incomeCategoryError,
     });
 
-    if (!titleError && !dateError && !amountError && !expenseCategoryError) {
-      try {
-        const response = await addExpense(newExpenseData).unwrap();
+    console.log('submitting data ==>> ', newIncomeData);
 
-        console.log('response add expense : ', response);
+    if (!titleError && !dateError && !amountError && !incomeCategoryError) {
+      try {
+        const response = await addIncome(newIncomeData).unwrap();
+
+        console.log('response add income : ', response);
 
         if (response?.success) {
           const {message} = response;
           showToast(message, 'success');
-          setNewExpenseData({
+          setNewIncomeData({
             title: '',
             description: '',
             date: null,
-            totalAmount: '',
-            expenseCategoryId: null,
+            amount: '',
+            incomeSourceId: null,
           });
-          setExpenseCategoryValue(null);
-          navigation.navigate('ExpensesScreen');
+          setIncomeCategoryValue(null);
+          //   navigation.navigate('HomeScreen');
         }
       } catch (error) {
-        console.log('error adding expense : ', error);
+        console.log('Error add income : ', error);
         const {
           data: {message},
         } = error;
@@ -133,23 +136,23 @@ const AddExpenseScreen = ({navigation}) => {
   };
 
   useEffect(() => {
-    if (expenseCategoriesData) {
-      const formattedItems = expenseCategoriesData?.map(category => ({
-        label:
-          category?.name === 'HealthAndWellness'
-            ? 'Health And Wellness'
-            : category?.name === 'SavingsAndInvestments'
-            ? 'Savings And Investments'
-            : category?.name,
-        value: category?.id,
-      }));
-      setExpenseCategoryItems(formattedItems);
+    if (incomeCategoriesData) {
+      const formattedItems = incomeCategoriesData
+        ?.map(category => ({
+          label:
+            category?.name === 'GovernmentBenefits'
+              ? 'Government Benefits'
+              : category?.name,
+          value: category?.id,
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label));
+      setIncomeCategoryItems(formattedItems);
     }
-  }, [expenseCategoriesData]);
+  }, [incomeCategoriesData]);
 
   return (
     <View style={styles.container}>
-      <FullScreenLoader loading={isAddExpenseLoading} />
+      <FullScreenLoader loading={isAddIncomeLoading} />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -164,9 +167,9 @@ const AddExpenseScreen = ({navigation}) => {
                 <Text style={styles.label}>Title:</Text>
               </View>
               <CustomInput
-                value={newExpenseData.title}
+                value={newIncomeData.title}
                 onChangeText={text => handleInputChange('title', text)}
-                placeholder={'Enter Title for Expense'}
+                placeholder={'Enter Title for Income'}
               />
             </View>
 
@@ -181,9 +184,9 @@ const AddExpenseScreen = ({navigation}) => {
                 <Text style={styles.label}>Description:</Text>
               </View>
               <CustomInput
-                value={newExpenseData.description}
+                value={newIncomeData.description}
                 onChangeText={text => handleInputChange('description', text)}
-                placeholder={'Enter Description for Expense'}
+                placeholder={'Enter Description for Income'}
                 multiline={true}
                 numberOfLines={5}
                 customInputStyles={{textAlignVertical: 'top'}}
@@ -199,8 +202,8 @@ const AddExpenseScreen = ({navigation}) => {
                 onPress={showDatePicker}
                 style={styles.dateInput}>
                 <Text style={styles.dateText}>
-                  {newExpenseData.date
-                    ? moment(newExpenseData.date).format('DD/MM/YYYY')
+                  {newIncomeData.date
+                    ? moment(newIncomeData.date).format('DD/MM/YYYY')
                     : 'Select a Date'}
                 </Text>
               </TouchableOpacity>
@@ -218,9 +221,9 @@ const AddExpenseScreen = ({navigation}) => {
               </View>
 
               <CustomInput
-                value={newExpenseData.totalAmount}
-                onChangeText={text => handleInputChange('totalAmount', text)}
-                placeholder={'Enter Total Amount for Expense'}
+                value={newIncomeData.amount}
+                onChangeText={text => handleInputChange('amount', text)}
+                placeholder={'Enter Total Amount for Income'}
                 keyboardType="numeric"
               />
             </View>
@@ -233,36 +236,36 @@ const AddExpenseScreen = ({navigation}) => {
 
             <View style={styles.formFieldView}>
               <View style={styles.labelView}>
-                <Text style={styles.label}>Expense Category:</Text>
+                <Text style={styles.label}>Income Category:</Text>
               </View>
               <DropDownPicker
-                open={openExpenseCategory}
-                value={expenseCategoryValue}
-                items={expenseCategoryItems}
-                setOpen={setOpenExpenseCategory}
-                setValue={setExpenseCategoryValue}
-                setItems={setExpenseCategoryItems}
+                open={openIncomeCategory}
+                value={incomeCategoryValue}
+                items={incomeCategoryItems}
+                setOpen={setOpenIncomeCategory}
+                setValue={setIncomeCategoryValue}
+                setItems={setIncomeCategoryItems}
                 onSelectItem={item => {
-                  setExpenseCategoryValue(item);
-                  setNewExpenseData(prevState => ({
+                  setIncomeCategoryValue(item);
+                  setNewIncomeData(prevState => ({
                     ...prevState,
-                    expenseCategoryId: item?.value,
+                    incomeSourceId: item?.value,
                   }));
                 }}
-                loading={isExpenseCategoryLoading}
+                loading={isIncomeCategoryLoading}
                 style={{
                   borderWidth: 3,
                   borderColor: Colors.PRIMARY,
                 }}
-                placeholder="Select an Expense Category"
+                placeholder="Select an Income Category"
                 listMode="MODAL"
               />
             </View>
 
-            {errors.expenseCategoryError && (
+            {errors.incomeCategoryError && (
               <View style={styles.errorView}>
                 <Text style={styles.errorText}>
-                  {errors.expenseCategoryError}
+                  {errors.incomeCategoryError}
                 </Text>
               </View>
             )}
@@ -287,4 +290,4 @@ const AddExpenseScreen = ({navigation}) => {
   );
 };
 
-export default AddExpenseScreen;
+export default AddIncomeScreen;
