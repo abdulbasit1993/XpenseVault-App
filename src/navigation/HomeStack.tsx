@@ -7,6 +7,7 @@ import ExpenseDetailScreen from '../screens/Home/ExpenseDetailScreen';
 import UpdateExpenseScreen from '../screens/Home/UpdateExpenseScreen';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import TransactionsScreen from '../screens/Home/TransactionsScreen';
+import IncomeScreen from '../screens/Home/IncomeScreen';
 
 const HomeStack = () => {
   const DrawerStack = createDrawerNavigator();
@@ -43,6 +44,7 @@ const HomeStack = () => {
         name="TransactionsScreen"
         component={TransactionsScreen}
       />
+      <DrawerStack.Screen name="IncomeScreen" component={IncomeScreen} />
     </DrawerStack.Navigator>
   );
 };

@@ -5,27 +5,27 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import Header from '../../components/Header';
 import Spacer from '../../components/Spacer';
 import TransactionCard from '../../components/TransactionCard';
-import {useGetExpensesOfUserQuery} from '../../redux/services';
-import {styles} from '../../styles/ExpensesScreenStyles';
+import {useGetIncomeOfUserQuery} from '../../redux/services';
+import {styles} from '../../styles/IncomeScreenStyles';
 
-const ExpensesScreen = ({navigation}) => {
+const IncomeScreen = ({navigation}) => {
   const isFocused = useIsFocused();
 
   const {
-    data: expenseData,
+    data: incomeData,
     error,
-    isLoading: isExpenseLoading,
+    isLoading: isIncomeLoading,
     refetch,
-  } = useGetExpensesOfUserQuery({});
+  } = useGetIncomeOfUserQuery({});
 
-  const {data = []} = expenseData || {};
+  const {data = []} = incomeData || {};
 
-  const renderExpenses = ({item}) => {
+  const renderIncome = ({item}) => {
     return (
       <TransactionCard
         data={item}
         onPress={() => {
-          navigation.navigate('ExpenseDetailScreen', {id: item?.id});
+          // navigation.navigate('ExpenseDetailScreen', {id: item?.id});
         }}
       />
     );
@@ -39,12 +39,12 @@ const ExpensesScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Header title="Expenses" drawer />
+      <Header title="Income" drawer />
 
       <View style={styles.subContainer}>
-        <Text style={styles.headingText}>Expenses</Text>
+        <Text style={styles.headingText}>Income</Text>
 
-        {isExpenseLoading ? (
+        {isIncomeLoading ? (
           <>
             <Spacer mT={15} />
             <SkeletonPlaceholder borderRadius={10}>
@@ -69,7 +69,7 @@ const ExpensesScreen = ({navigation}) => {
         ) : (
           <FlatList
             data={data}
-            renderItem={renderExpenses}
+            renderItem={renderIncome}
             contentContainerStyle={{marginTop: 15}}
           />
         )}
@@ -78,4 +78,4 @@ const ExpensesScreen = ({navigation}) => {
   );
 };
 
-export default ExpensesScreen;
+export default IncomeScreen;

@@ -4,8 +4,8 @@ import {styles} from '../styles/ExpenseCardStyles';
 import moment from 'moment';
 import Spacer from './Spacer';
 
-const ExpenseCard = ({data, onPress}) => {
-  const {title, date, totalAmount} = data;
+const TransactionCard = ({data, onPress}) => {
+  const {title, date, totalAmount, amount} = data;
   const formattedDate = moment(date).format('DD MMM YYYY');
 
   return (
@@ -23,10 +23,10 @@ const ExpenseCard = ({data, onPress}) => {
       <Spacer mT={10} />
       <View style={styles.row}>
         <Text style={styles.amountText}>Total Amount:</Text>
-        <Text style={styles.amountText}>Rs. {totalAmount}</Text>
+        <Text style={styles.amountText}>Rs. {totalAmount ?? amount}</Text>
       </View>
     </TouchableOpacity>
   );
 };
 
-export default ExpenseCard;
+export default TransactionCard;

@@ -49,6 +49,10 @@ export function CustomDrawer(props) {
         label = 'Expenses';
       }
 
+      if (route.name === 'IncomeScreen') {
+        label = 'Income';
+      }
+
       return {
         ...route,
         label,
