@@ -120,7 +120,7 @@ const AddIncomeScreen = ({navigation}) => {
             incomeSourceId: null,
           });
           setIncomeCategoryValue(null);
-          //   navigation.navigate('HomeScreen');
+          navigation.navigate('IncomeScreen');
         }
       } catch (error) {
         console.log('Error add income : ', error);

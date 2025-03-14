@@ -105,7 +105,8 @@ export function CustomDrawer(props) {
 
       <View>
         {modifiedItems.map((route, index) => {
-          const isActive = props.state.index === index;
+          const isActive =
+            props.state.routes[props.state.index].name === route.name;
 
           return (
             <DrawerItem

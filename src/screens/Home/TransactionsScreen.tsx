@@ -7,7 +7,7 @@ import {Colors} from '../../constants/colors';
 import AddExpenseScreen from './AddExpenseScreen';
 import AddIncomeScreen from './AddIncomeScreen';
 
-const TransactionsScreen = () => {
+const TransactionsScreen = ({navigation}) => {
   const [pageIndex, setPageIndex] = useState(0);
 
   return (
@@ -37,9 +37,9 @@ const TransactionsScreen = () => {
         </View>
 
         {pageIndex === 0 ? (
-          <AddExpenseScreen />
+          <AddExpenseScreen navigation={navigation} />
         ) : pageIndex === 1 ? (
-          <AddIncomeScreen />
+          <AddIncomeScreen navigation={navigation} />
         ) : (
           <></>
         )}
